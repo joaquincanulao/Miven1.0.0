@@ -1,0 +1,36 @@
+<ion-header>
+  <ion-buttons slot="start">
+    <ion-menu-button></ion-menu-button>
+  </ion-buttons>
+  <ion-toolbar>
+    <ion-title>Agregar Ítem</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content>
+  <ion-item>
+    <ion-label position="floating">Selecciona un producto</ion-label>
+    <ion-select (ionChange)="onItemSelected($event)" placeholder="Selecciona o agrega un ítem">
+      <ion-select-option *ngFor="let item of availableItems" [value]="item">{{ item }}</ion-select-option>
+      <ion-select-option value="Otro">Otro (Agregar nuevo)</ion-select-option>
+    </ion-select>
+  </ion-item>
+
+  <ion-item *ngIf="isNewItem">
+    <ion-label position="floating">Nuevo Ítem</ion-label>
+    <ion-input [(ngModel)]="newItem.nombre"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="floating">Cantidad</ion-label>
+    <ion-input type="number" [(ngModel)]="newItem.cantidad"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="floating">Fecha de Vencimiento</ion-label>
+    <ion-datetime displayFormat="YYYY-MM-DD" min="2024-01-01" max="2030-12-31" [(ngModel)]="newItem.fechaVencimiento"></ion-datetime>
+  </ion-item>
+
+  <ion-button expand="full" (click)="addItem()">Agregar Ítem</ion-button>
+</ion-content>

@@ -1,0 +1,36 @@
+<ion-header>
+  <ion-toolbar>
+   <ion-buttons slot="start">
+     <ion-menu-button></ion-menu-button>
+   <ion-title>Inventario</ion-title>
+     <ion-button routerLink="/add-item">Agregar Item</ion-button>
+   </ion-buttons>
+ </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <!-- Mostrar ítems del inventario -->
+    <ion-item *ngFor="let item of inventoryItems">
+      <ion-label>
+        <h2>{{ item.nombre }}</h2>
+        <p>Cantidad: {{ item.cantidad }}</p>
+        <p>Fecha de Vencimiento: {{ item.fechaVencimiento }}</p>
+      </ion-label>
+      <ion-button color="danger" (click)="deleteItem(item.id)">Eliminar</ion-button>
+    </ion-item>
+  </ion-list>
+
+  <!-- Mostrar ítems próximos a vencer -->
+  <ion-list *ngIf="expiringItems.length > 0">
+    <ion-item *ngFor="let item of expiringItems">
+      <ion-label>
+        <h2>{{ item.nombre }}</h2>
+        <p>Vence el: {{ item.fechaVencimiento }}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>
+
+
+ 

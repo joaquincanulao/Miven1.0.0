@@ -1,0 +1,7 @@
+{
+  "name": "miven1.1",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

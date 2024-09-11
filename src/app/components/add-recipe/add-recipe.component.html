@@ -1,0 +1,63 @@
+<ion-header>
+  <ion-buttons slot="start">
+    <ion-menu-button></ion-menu-button>
+  </ion-buttons>
+  <ion-toolbar>
+    <ion-title>Agregar Receta</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item>
+      <ion-label position="stacked">Título</ion-label>
+      <ion-input [(ngModel)]="titulo"></ion-input>
+    </ion-item>
+
+    <!-- Input para seleccionar la imagen -->
+    <ion-item>
+      <input type="file" (change)="onFileSelected($event)" accept="image/*">
+    </ion-item>
+
+    <!-- Mostrar vista previa de la imagen seleccionada -->
+    <ion-item *ngIf="imagePreview">
+      <img [src]="imagePreview" alt="Vista previa de la imagen" style="width: 100%; max-height: 200px;">
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Descripción</ion-label>
+      <ion-textarea [(ngModel)]="descripcion"></ion-textarea>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Categoría</ion-label>
+      <ion-select [(ngModel)]="categoria">
+        <ion-select-option value="desayuno">Desayuno</ion-select-option>
+        <ion-select-option value="almuerzo">Almuerzo</ion-select-option>
+        <ion-select-option value="cena">Cena</ion-select-option>
+        <ion-select-option value="postre">Postre</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <!-- Menú desplegable para seleccionar ingredientes predeterminados -->
+    <ion-item>
+      <ion-label>Seleccionar Ingrediente</ion-label>
+      <ion-select [(ngModel)]="ingrediente">
+        <ion-select-option *ngFor="let item of globalItems" [value]="item.nombre">{{ item.nombre }}</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <!-- Campo para agregar un ingrediente manualmente si no está en la lista -->
+    <ion-item>
+      <ion-button (click)="addIngredient()">Añadir</ion-button>
+    </ion-item>
+
+    <ion-list>
+      <ion-item *ngFor="let ing of ingredientes">
+        {{ ing }}
+      </ion-item>
+    </ion-list>
+
+    <ion-button expand="full" (click)="addRecipe()">Agregar Receta</ion-button>
+  </ion-list>
+</ion-content>
