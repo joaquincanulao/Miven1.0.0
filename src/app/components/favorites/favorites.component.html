@@ -3,6 +3,9 @@
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
+  </ion-header>
+
+  <ion-header>
   <ion-toolbar>
     <ion-segment [(ngModel)]="selectedCategory" (ionChange)="filterFavorites()">
       <ion-segment-button value="desayuno">
@@ -26,11 +29,6 @@
     <!-- Iterar sobre las recetas favoritas filtradas -->
     <ion-card *ngFor="let recipe of filteredFavorites">
       <ion-img *ngIf="recipe.imageUrl" [src]="recipe.imageUrl" alt="Imagen de la receta"></ion-img>
-
-      <!-- Mostrar calificación con estrellas -->
-      <div class="star-rating">
-        <ion-icon *ngFor="let star of [1, 2, 3, 4, 5]" [name]="star <= recipe.calificacionPromedio ? 'star' : 'star-outline'"></ion-icon>
-      </div>
 
       <ion-card-header>
         <ion-card-title>{{ recipe.titulo }}</ion-card-title>
@@ -79,14 +77,6 @@
           <!-- Ingredientes -->
           <ion-item *ngFor="let ingredient of selectedRecipe?.ingredientes">
             {{ ingredient }}
-          </ion-item>
-
-          <!-- Mostrar estrellas de calificación -->
-          <ion-item>
-            <ion-label>Calificación</ion-label>
-            <div class="star-rating">
-              <ion-icon *ngFor="let star of [1, 2, 3, 4, 5]" [name]="star <= selectedRecipe?.calificacionPromedio ? 'star' : 'star-outline'"></ion-icon>
-            </div>
           </ion-item>
         </ion-list>
 

@@ -116,62 +116,21 @@ loadFavorites() {
     });
 }
 
-   // Método para agregar una receta a favoritos
-   addToFavorites(recipeId: string) {
-    if (!this.userId) {
-      console.error('El ID del usuario no está disponible');
-      return;
-    }
-
-    // Encontrar la receta seleccionada
-    const favoriteRecipe = this.breakfastRecipes.find(recipe => recipe.id === recipeId);
-    if (!favoriteRecipe) {
-      console.error('No se encontró la receta seleccionada');
-      return;
-    }
-
-    // Verificar si la receta ya está en favoritos
-    const alreadyFavorited = this.favorites.some(fav => fav.id === recipeId);
-    if (alreadyFavorited) {
-      console.log('Esta receta ya está en favoritos');
-      return;
-    }
-
-    // Guardar la receta favorita en Firestore
-    this.firestore
-      .collection('usuarios')
-      .doc(this.userId)
-      .collection('favoritos')
-      .doc(recipeId)
-      .set(favoriteRecipe)
-      .then(() => {
-        console.log('Receta agregada a favoritos');
-      })
-      .catch(error => {
-        console.error('Error al agregar receta a favoritos:', error);
-      });
+addToFavorites(recipeId: string, category: string) {
+  if (this.userId) {
+    const favoriteRecipe = {
+      recipeId: recipeId,
+      category: category, // Guardar la categoría
+      userId: this.userId
+    };
+    this.firestore.collection('usuarios').doc(this.userId).collection('favoritos').add(favoriteRecipe).then(() => {
+      console.log('Receta agregada a favoritos');
+    }).catch(error => {
+      console.error('Error al agregar a favoritos:', error);
+    });
   }
+}
 
-  // Método para eliminar una receta de los favoritos
-  removeFromFavorites(recipeId: string) {
-    if (!this.userId) {
-      console.error('El ID del usuario no está disponible');
-      return;
-    }
-
-    this.firestore
-      .collection('usuarios')
-      .doc(this.userId)
-      .collection('favoritos')
-      .doc(recipeId)
-      .delete()
-      .then(() => {
-        console.log('Receta eliminada de favoritos');
-      })
-      .catch(error => {
-        console.error('Error al eliminar receta de favoritos:', error);
-      });
-  }
 }
 
 
