@@ -12,7 +12,7 @@ export class AppComponent {
   public appPages: any = [
     { title: 'Inicio', url: '/home', icon: 'Home' },
     { title: 'Inventario', url: '/inventory', icon: 'clipboard' },
-    { title: 'Favorites', url: '/favorites', icon: 'heart' },
+    { title: 'Favoritos', url: '/favorites', icon: 'heart' },
     { title: 'Recetas', icon: 'restaurant',
       items: [
         {title: 'Desayuno', url: '/breakfast-recipes', icon: 'restaurant'},

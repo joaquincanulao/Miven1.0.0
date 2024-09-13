@@ -1,10 +1,10 @@
 <ion-header>
-  <ion-buttons slot="start">
-    <ion-menu-button></ion-menu-button>
-  </ion-buttons>
   <ion-toolbar>
-    <ion-title>Recetas de Desayuno</ion-title>
-  </ion-toolbar>
+   <ion-buttons slot="start">
+     <ion-menu-button></ion-menu-button>
+   <ion-title>Recetas de Desayuno</ion-title>
+  </ion-buttons>
+ </ion-toolbar>
 </ion-header>
 
 <ion-content>
@@ -32,7 +32,8 @@
         <ion-button *ngIf="recipe.creadorId === userId" (click)="deleteRecipe(recipe.id)" color="danger">
           Eliminar
         </ion-button>
-        <ion-button fill="clear" (click)="addToFavorites(recipe.id, recipe.categoria)">Agregar a Favoritos</ion-button>      </ion-card-content>
+        <ion-button fill="clear" (click)="addToFavorites(recipe.id, recipe.categoria)">Agregar a Favoritos</ion-button>      
+      </ion-card-content>
     </ion-card>
   </ion-list>
 
@@ -49,7 +50,6 @@
       </ion-header>
 
       <ion-content>
-        <!-- Mostrar imagen de la receta -->
         <ion-img *ngIf="selectedRecipe?.imageUrl" [src]="selectedRecipe?.imageUrl" alt="Imagen de la receta"></ion-img>
 
         <ion-list>

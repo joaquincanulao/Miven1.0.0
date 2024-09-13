@@ -1,15 +1,18 @@
 import { Component } from '@angular/core';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { finalize } from 'rxjs/operators';
-import { RecipeService } from '../../services/recipe.service'; // Servicio de recetas
-import { InventoryService } from '../../services/inventory.service'; // Servicio de inventario
+import { RecipeService } from '../../services/recipe.service'; 
+import { InventoryService } from '../../services/inventory.service'; 
 import { AngularFireAuth } from '@angular/fire/compat/auth';
+
 
 @Component({
   selector: 'app-add-recipe',
   templateUrl: './add-recipe.component.html',
   styleUrls: ['./add-recipe.component.scss']
 })
+
+
 export class AddRecipeComponent {
   titulo: string = '';
   imageUrl: string | null = null;
@@ -19,28 +22,27 @@ export class AddRecipeComponent {
   ingrediente: string = '';
   selectedFile: File | null = null;
   imagePreview: string | ArrayBuffer | null = null;
-
   globalItems: any[] = []; // Aquí se almacenarán los ítems predeterminados
 
   constructor(
     private recipeService: RecipeService,
-    private inventoryService: InventoryService, // Inyectar el servicio de inventario
+    private inventoryService: InventoryService,
     private auth: AngularFireAuth,
     private storage: AngularFireStorage
   ) {}
 
   ngOnInit() {
-    this.loadGlobalItems(); // Cargar los ítems predeterminados al iniciar el componente
+    this.loadGlobalItems(); // cargar items globales 
   }
 
-  // Método para cargar los ítems globales desde el servicio de inventario
+  // Método para cargar los ítems globales desde inventario
   loadGlobalItems() {
     this.inventoryService.getGlobalItems().subscribe(items => {
       this.globalItems = items;
     });
   }
 
-  // Método para agregar un nuevo ingrediente a la lista
+  // Método para agregar un nuevo item a la lista
   addIngredient() {
     if (this.ingrediente.trim()) {
       this.ingredientes.push(this.ingrediente.trim());
@@ -48,7 +50,7 @@ export class AddRecipeComponent {
     }
   }
 
-  // Método para agregar la receta a Firestore, incluyendo la subida de imagen
+  // Método para agregar la receta a base de datos
   addRecipe() {
     if (this.selectedFile) {
       const filePath = `recipes/${new Date().getTime()}_${this.selectedFile.name}`;
@@ -58,8 +60,8 @@ export class AddRecipeComponent {
       uploadTask.snapshotChanges().pipe(
         finalize(() => {
           fileRef.getDownloadURL().subscribe(url => {
-            this.imageUrl = url; // Asignar la URL de la imagen
-            this.saveRecipe(); // Guardar la receta en la base de datos
+            this.imageUrl = url; 
+            this.saveRecipe();
           });
         })
       ).subscribe(
@@ -67,7 +69,7 @@ export class AddRecipeComponent {
         (error) => console.error('Error al subir la imagen:', error)
       );
     } else {
-      this.saveRecipe(); // Guardar la receta sin imagen si no se seleccionó ninguna
+      this.saveRecipe(); 
     }
   }
 

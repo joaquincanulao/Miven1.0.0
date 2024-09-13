@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { RecipeService } from '../../services/recipe.service';
+import { InventoryService } from '../../services/inventory.service';
 
 @Component({
   selector: 'app-favorites',
@@ -15,10 +17,13 @@ export class FavoritesComponent implements OnInit {
   selectedRecipe: any | null = null;
   selectedCategory = 'desayuno'; // Categoría seleccionada por defecto
   isAuthenticated: boolean = false;
+  availableIngredients: any[] = [];
 
   constructor(
     private auth: AngularFireAuth,
-    private firestore: AngularFirestore
+    private firestore: AngularFirestore,
+    private recipeService: RecipeService, 
+    private inventoryService: InventoryService,
   ) {
     console.log(' en cosntruct')
 
@@ -56,44 +61,33 @@ export class FavoritesComponent implements OnInit {
     console.log(' this === ', this.userId)
 
     if (this.userId) {   
+      this.filteredFavorites = [];
       const favoritos = this.firestore.collection('usuarios').doc(this.userId).collection('favoritos'
         , ref => ref.where('category', '==', this.selectedCategory)
       );
       favoritos.get().forEach((querySnapshot) => {
-        const tempDoc: any= []
         querySnapshot.forEach((doc) => {
-          tempDoc.push({ id: doc.id, ...doc.data() })
+          const datos = doc.data();
+          console.log('datos  ID :: ', doc.id)
+          this.firestore.collection('recetas').doc(datos['recipeId']).get().forEach(
+            (rec) => {
+              const d : any = rec.data();
+              d.id = doc.id
+              this.filteredFavorites.push(d);
+              // console.log('receta :: ', d)
+            }
+          );
         })
-        console.log(tempDoc)
-      })
-       
-    /*
-    this.firestore.collection('usuarios').doc(this.userId).collection('favoritos'
-      // , ref => ref.where('category', '==', this.selectedCategory)
-    ).snapshotChanges().subscribe(actions => {
-      console.log(' map == ', 
-        actions.map(a => {
-          const data = a.payload.doc.data();
-          const id = a.payload.doc.id;
-          // return { id, ...data };
+        // console.log('Favoritos filtrados:', this.filteredFavorites);
         })
 
-      );
-      
-      //this.filteredFavorites = actions.map(a => {
-      //  const data = a.payload.doc.data();
-      //  const id = a.payload.doc.id;
-      //  return { id, ...data };
-      //});
-      
-    });
-  /* */
   }
 }
 
   // Método para abrir el modal de detalles de la receta
   openRecipeModal(recipe: any) {
     this.selectedRecipe = recipe;
+    this.checkIngredientsAvailability(recipe.ingredientes);
     this.isModalOpen = true;
   }
 
@@ -103,25 +97,61 @@ export class FavoritesComponent implements OnInit {
     this.selectedRecipe = null;
   }
 
-  // Método para eliminar una receta de favoritos
   removeFromFavorites(recipeId: string) {
-    if (!this.userId) {
-      console.error('El ID del usuario no está disponible');
-      return;
+    console.log( 'recipeId :: ', recipeId)
+    if (this.userId) {  
+      //console.error('El ID del usuario no está disponible');
+      //return;
+      const favoritos = this.firestore.collection('usuarios').doc(this.userId).collection('favoritos').doc(recipeId).delete()
+      this.filterFavorites()
     }
-
+ 
+    /*
     this.firestore
       .collection('usuarios')
-      .doc(this.userId)
-      .collection('favoritos')
-      .doc(recipeId)
-      .delete()
-      .then(() => {
-        console.log('Receta eliminada de favoritos');
+      .doc(this.userId)  
+      .collection('favoritos', ref => ref.where('category', '==', this.selectedCategory))
+      .get()
+      .subscribe(snapshot => {
         
-      })
-      .catch(error => {
-        console.error('Error al eliminar receta de favoritos:', error);
+        if (!snapshot.empty) {
+          snapshot.forEach(doc => {
+            console.log('Documento encontrado en favoritos:', doc.id);
+            if (!this.userId) return;
+            this.firestore
+              .collection('usuarios')
+              .doc(this.userId)
+              .collection('favoritos')
+              .doc(doc.id)
+              .delete()
+              .then(() => {
+                console.log('Receta eliminada de favoritos');
+                this.filterFavorites();
+              })
+              .catch(error => {
+                console.error('Error al eliminar receta de favoritos:', error);
+              });
+          });
+        } else {
+          console.error('No se encontró la receta en favoritos');
+        }
       });
+      /* */
   }
+
+  checkIngredientsAvailability(recipeIngredients: string[]) {
+    if (this.userId) {
+      this.inventoryService.getInventory(this.userId).subscribe(inventory => {
+        this.availableIngredients = recipeIngredients.map(ingredient => {
+          return {
+            name: ingredient,
+            inInventory: inventory.some(item => item.nombre.toLowerCase() === ingredient.toLowerCase())
+          };
+        });
+      });
+    }
+  }
+
+  
+
 }

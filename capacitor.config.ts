@@ -12,4 +12,11 @@ const config: CapacitorConfig = {
   },
 };
 
+export interface PluginsConfig {
+  [CAPACITOR_ANDROID_STUDIO_PATH: string]: | {
+        [CAPACITOR_ANDROID_STUDIO_PATH: string]: '/opt/android-studio/bin/studio.sh'; // Ruta en Linux
+      }
+    | undefined;
+}
+
 export default config;

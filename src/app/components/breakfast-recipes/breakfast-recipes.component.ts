@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { RecipeService } from '../../services/recipe.service';
-import { InventoryService } from '../../services/inventory.service'; // Servicio del inventario
+import { InventoryService } from '../../services/inventory.service'; 
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
+
 @Component({
   selector: 'app-breakfast-recipes',
   templateUrl: './breakfast-recipes.component.html',
@@ -47,8 +48,8 @@ export class BreakfastRecipesComponent implements OnInit {
     this.selectedRecipe = recipe;
     this.checkIngredientsAvailability(recipe.ingredientes);
     this.recipeService.getRecipeCommentsWithUser(recipe.id).subscribe((comments: any[]) => {
-    this.selectedRecipe.comentarios = comments;
-    this.isModalOpen = true;});
+    this.selectedRecipe.comentarios = comments;});
+    this.isModalOpen = true;
   }
 
   closeModal() {
