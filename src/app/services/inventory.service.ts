@@ -9,7 +9,7 @@ interface InventoryItem {
   nombre: string;
   cantidad: number;
   fechaVencimiento: string; // Guardaremos la fecha como un string para simplificar
-  // Puedes agregar más campos aquí si es necesario
+  unidadMedida: string;
 }
 
 @Injectable({
@@ -56,6 +56,20 @@ export class InventoryService {
       .doc(itemId)
       .delete();
   }
+
+ // Método para actualizar la cantidad de un ítem en el inventario
+ updateItemQuantity(userId: string, itemId: string, newQuantity: number) {
+  return this.firestore
+    .collection('usuarios')
+    .doc(userId)
+    .collection('inventario')
+    .doc(itemId)
+    .update({ cantidad: newQuantity });
+}
+
+
+
+
 
     // Método para verificar los ítems que están próximos a vencer
     getExpiringItems(userId: string): Observable<any[]> {

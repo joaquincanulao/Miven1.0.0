@@ -11,6 +11,10 @@ export class InventoryComponent implements OnInit {
   inventoryItems: any[] = [];
   expiringItems: any[] = []; // Lista de ítems por vencer
   userId: string | null = null;
+  editItemCantidad: number | null = null;  // Nueva cantidad a editar
+  editItemId: string | null = null;  // ID del ítem que se está editando
+  isEditModalOpen = false;
+
 
   constructor(private inventoryService: InventoryService, private auth: AngularFireAuth) {}
 
@@ -68,5 +72,30 @@ export class InventoryComponent implements OnInit {
       });
     }
   }
+
+ // Función para abrir el modal de edición y establecer el ítem que se va a editar
+ startEditItem(item: any) {
+  this.editItemCantidad = item.cantidad;  // Establecer la cantidad actual en el campo de edición
+  this.editItemId = item.id;  // Guardar el ID del ítem
+  this.isEditModalOpen = true;  // Abrir el modal
 }
 
+// Función para cerrar el modal de edición
+closeEditModal() {
+  this.isEditModalOpen = false;
+  this.editItemCantidad = null;
+  this.editItemId = null;
+}
+
+// Función para actualizar la cantidad del ítem
+updateItemQuantity() {
+  if (this.userId && this.editItemId && this.editItemCantidad != null) {
+    this.inventoryService.updateItemQuantity(this.userId, this.editItemId, this.editItemCantidad).then(() => {
+      console.log('Cantidad actualizada con éxito');
+      this.closeEditModal();  // Cerrar el modal después de la actualización
+    }).catch(error => {
+      console.error('Error al actualizar la cantidad:', error);
+    });
+  }
+}
+}

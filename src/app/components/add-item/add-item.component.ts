@@ -16,7 +16,8 @@ export class AddItemComponent implements OnInit {
   newItem: any = {
     nombre: '',
     cantidad: 0,
-    fechaVencimiento: ''
+    fechaVencimiento: '',
+    unidadMedida: ''
   };
   userId: string | null = null;
 
@@ -64,16 +65,17 @@ export class AddItemComponent implements OnInit {
   // Método para agregar un ítem al inventario
   addItem() {
     if (!this.isNewItem && this.selectedItem) {
-      this.newItem.nombre = this.selectedItem;  // Usar el ítem seleccionado
+      this.newItem.nombre = this.selectedItem;
     }
 
-    if (this.userId && this.newItem.nombre && this.newItem.cantidad > 0 && this.newItem.fechaVencimiento) {
+    if (this.userId && this.newItem.nombre && this.newItem.cantidad > 0 && this.newItem.unidadMedida  && this.newItem.fechaVencimiento) {
       const formattedFecha = this.formatFechaVencimiento(this.newItem.fechaVencimiento); // Formatear la fecha
       
       const itemToSave = {
         nombre: this.newItem.nombre,
         cantidad: this.newItem.cantidad,
-        fechaVencimiento: formattedFecha
+        fechaVencimiento: formattedFecha,
+        unidadMedida: this.newItem.unidadMedida
       };
 
       this.inventoryService.addItemToInventory(itemToSave, this.userId).then(() => {
@@ -98,7 +100,7 @@ export class AddItemComponent implements OnInit {
 
   // Método para resetear el formulario
   resetForm() {
-    this.newItem = { nombre: '', cantidad: 0, fechaVencimiento: '' };
+    this.newItem = { nombre: '', cantidad: 0, fechaVencimiento: '', unidadMedida:'' };
     this.selectedItem = null;
     this.isNewItem = false;
   }

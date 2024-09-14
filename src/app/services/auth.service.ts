@@ -57,4 +57,10 @@ export class AuthService {
       this.router.navigate(['/login']);
     });
   }
+
+ // Método para obtener el usuario autenticado actual
+ getCurrentUser() {
+  return this.auth.currentUser;
+}
+
 }

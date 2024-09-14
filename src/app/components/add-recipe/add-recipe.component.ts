@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { finalize } from 'rxjs/operators';
 import { RecipeService } from '../../services/recipe.service'; 
@@ -13,7 +13,7 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 })
 
 
-export class AddRecipeComponent {
+export class AddRecipeComponent implements OnInit {
   titulo: string = '';
   imageUrl: string | null = null;
   descripcion: string = '';
@@ -22,7 +22,8 @@ export class AddRecipeComponent {
   ingrediente: string = '';
   selectedFile: File | null = null;
   imagePreview: string | ArrayBuffer | null = null;
-  globalItems: any[] = []; // Aquí se almacenarán los ítems predeterminados
+  globalItems: any[] = [];
+  cantidadIngrediente: number = 1;
 
   constructor(
     private recipeService: RecipeService,

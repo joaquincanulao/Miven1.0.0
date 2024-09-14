@@ -28,6 +28,11 @@
   </ion-item>
 
   <ion-item>
+    <ion-label position="floating">Unidad de Medida</ion-label>
+    <ion-input [(ngModel)]="newItem.unidadMedida"></ion-input>
+  </ion-item>
+
+  <ion-item>
     <ion-label position="floating">Fecha de Vencimiento</ion-label>
     <ion-datetime displayFormat="YYYY-MM-DD" min="2024-01-01" max="2030-12-31" [(ngModel)]="newItem.fechaVencimiento"></ion-datetime>
   </ion-item>
